@@ -95,7 +95,7 @@ end
 
 %% end and save
 function end_Callback(source,eventdata) 
-    mkdir "pts_collected";
+    mkdir pts_collected;
     filename = num2str(k) + ".mat";
     name = pwd + "/pts_collected/" + filename;
     save(name,'pts_pos','pts_neg','k');
