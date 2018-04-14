@@ -1,4 +1,5 @@
-function videorosh
+function coor_collector
+
 clear variables;
 % VIDEOROSH
 % who knows how the hell this works
@@ -28,14 +29,16 @@ nfrms = uicontrol('Style','text','String',['nframes = ' num2str(nframes)],'Posit
 kp1 = uicontrol('Style','pushbutton','String','k+1','Position',[715,220,70,25],'Callback',{@kp1_Callback});
 km1 = uicontrol('Style','pushbutton','String','k-1','Position',[715,180,70,25],'Callback',{@km1_Callback});
 ktext = uicontrol('Style','text','String','k=','Position',[725,90,60,15]);
-kequal = uicontrol('Style','edit','String','','Position',[715,135,70,25],'Callback',{@kequal_Callback});
+kequal = uicontrol('Style','edit','String','0','Position',[715,135,70,25],'Callback',{@kequal_Callback});
 enter = uicontrol('Style','pushbutton','String','go to frame k','Position',[725,90,60,15],'Callback',{@gotoK_Callback});
+kValue = uicontrol('Style','text','String','k=','Position',[815,235,80,35],'Callback',{@kValue_Callback});
+end_button = uicontrol('Style','pushbutton','String','END','Position',[755,260,70,25],'Callback',{@end_Callback});
 
 set(gcf, 'units', 'normalized', 'position', [0.05 0.15 0.65 0.75]);
  
 ha = axes('Units','pixels','Position',[50,60,600,500]);
-align([nfrms,kp1,km1,ktext,kequal,enter],'Center','None');
- 
+align([nfrms,kp1,km1,ktext,kequal,enter,kValue],'Center','None');
+
 f.Visible = 'on';
  
 % Push button callbacks. Each callback plots current_data in the
@@ -46,6 +49,7 @@ function kp1_Callback(source,eventdata)
     nframe = k + 1;
 	k = k + 1;
 	i = read(v, nframe);
+    set(kValue,'Visible','on','string',num2str(k));
 	imshow(i,'InitialMagnification',180);
     if ~isempty(pts(k).cdata)
         x = pts(k).cdata(:,1);
@@ -64,6 +68,7 @@ function km1_Callback(source,eventdata)
 	if k ~= 1
         nframe = k - 1;
         k = k - 1;
+        set(kValue,'Visible','on','string',num2str(k));
         i = read(v, nframe);
         imshow(i,'InitialMagnification',180);
         if ~isempty(pts(k).cdata)
@@ -81,19 +86,38 @@ end
  
 function kequal_Callback(source,eventdata,handles) 
 % Display contour plot of the currently selected data.
-	current_string = get(source, 'String');
+    current_string = get(source, 'String');
     k = str2double(current_string);
-    display(k);
 end
+
+function kValue_Callback(source,eventdata,handles) 
+% Display contour plot of the currently selected data.
+	current_string = get(source, 'String');
+    set(gcf, 'String', current_string);
+end
+
 function gotoK_Callback(source,eventdata) 
 % Display contour plot of the currently selected data.
-	if k ~= 1
+	if k <= nframes & k>=0
         nframe = k;
+        set(kValue,'Visible','on','string',num2str(k));
         i = read(v, nframe);
         imshow(i,'InitialMagnification',180);
+        if ~isempty(pts(k).cdata)
+            x = pts(k).cdata(:,1);
+            y = pts(k).cdata(:,2);
+            hold on;
+            plot(x, y, 'r*', 'LineWidth', 1, 'MarkerSize', 10);
+        end
         [xi,yi] = getpts(gca);
         pts(k).cdata = [xi,yi];
     end
+end
+function end_Callback(source,eventdata) 
+    filename = num2str(k) + ".mat";
+    name = pwd + "/pts_collected/" + filename;
+    save(name,'pts','k');
+    close;
 end
 
  
