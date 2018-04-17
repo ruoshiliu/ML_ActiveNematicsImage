@@ -2,7 +2,7 @@ function coor_collector
 %% read video information
 clear variables;
  
-v = VideoReader('d400um.avi');
+v = VideoReader('/Users/ruoshiliu/desktop/d400um.avi');
 k = 0;
 
 nframes = v.duration * v.framerate;
@@ -34,12 +34,15 @@ kequal = uicontrol('Style','edit','String','0','Position',[left+width*1.25,145,7
 % Go to frame k
 enter = uicontrol('Style','pushbutton','String','go to frame k','Position',[left+width*1.2,120,80,15],'Callback',{@gotoK_Callback});
 % End and save
-end_button = uicontrol('Style','pushbutton','String','END','BackgroundColor','red','FontWeight','bold','FontSize',14,'Position',[left+width*1.2,800,70,25],'Callback',{@end_Callback});
+end_button = uicontrol('Style','pushbutton','String','END','BackgroundColor','red','FontWeight','bold','FontSize',14,'Position',[left+width*1.22,400,70,25],'Callback',{@end_Callback});
 % "K="
 ktext2 = uicontrol('Style','text','String','k=','Position',[left+width*1.20,150,15,15]);
+% +1/2 or -1/2
+positive = uicontrol('Style','text','FontSize',12.5,'ForegroundColor','b','String','+1/2','Position',[left+width*1.25,350,35,15],'Visible','off');
+negative = uicontrol('Style','text','FontSize',12.5,'ForegroundColor','b','String','-1/2','Position',[left+width*1.25,350,35,15],'Visible','off');
 set(gcf, 'units', 'normalized', 'position', [0 0 1 1]);
  
-ha = axes('Units','normalized','Position',[0.05,0.05,0.5,0.8]);
+ha = axes('Units','normalized','Position',[0.32,0.05,0.55,0.85]);
 align([nfrms,kp1,km1,enter],'Center','None');
 
 f.Visible = 'on';
@@ -53,7 +56,7 @@ function kp1_Callback(source,eventdata)
 	k = k + 1;
     set(kValue,'Visible','on','string',num2str(k));
     i = read(v, nframe);
-    imshow(i,'InitialMagnification',200);
+    imshow(i,'InitialMagnification',220);
     display_collect();
 end
  %% last frame
@@ -64,7 +67,7 @@ function km1_Callback(source,eventdata)
         k = k - 1;
         set(kValue,'Visible','on','string',num2str(k));
         i = read(v, nframe);
-        imshow(i,'InitialMagnification',200);
+        imshow(i,'InitialMagnification',220);
         display_collect();
     end
 end
@@ -75,7 +78,7 @@ function gotoK_Callback(source,eventdata)
         nframe = k;
         set(kValue,'Visible','on','string',num2str(k));
         i = read(v, nframe);
-        imshow(i,'InitialMagnification',200);
+        imshow(i,'InitialMagnification',220);
         display_collect();
     end
 end
@@ -95,9 +98,9 @@ end
 
 %% end and save
 function end_Callback(source,eventdata) 
-    mkdir pts_collected;
+%     mkdir pts_collected;
     filename = num2str(k) + ".mat";
-    name = pwd + "/pts_collected/" + filename;
+    name = "/Users/ruoshiliu/desktop/pts_collected/" + filename;
     save(name,'pts_pos','pts_neg','k');
     close;
 end
@@ -123,11 +126,15 @@ end
 %% collect
     function collect()
         hold on;
+        positive.Visible = 'on';
         [x_pos,y_pos] = getpts(gca);
         pts_pos(k).cdata = [x_pos,y_pos];
+        positive.Visible = 'off';
         hold on;
+        negative.Visible = 'on';
         [x_neg,y_neg] = getpts(gca);
         pts_neg(k).cdata = [x_neg,y_neg];
+        negative.Visible = 'off';
         plot(x_neg, y_neg, 'g.', 'LineWidth', 1, 'MarkerSize', 20);
         plot(x_pos, y_pos, 'y+', 'LineWidth', 1, 'MarkerSize', 10);
     end   
