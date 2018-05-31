@@ -130,10 +130,7 @@ end
     function collect(source, eventdata)
         hold on;
 
-%         key = get(gcf, 'CurrentCharacter');
-%         k1 = waitforbuttonpress
-%         if key == char(8) || key == char(127)
-        if waitforbuttonpress == 1
+        if waitforbuttonpress == 1 % press any key to start collecting
             positive.Visible = 'on';
             [x_pos,y_pos] = getpts(gca);
             pts_pos(k).cdata = [x_pos,y_pos];
@@ -149,10 +146,12 @@ end
     end
     function keyPress(source, eventdata)
         switch eventdata.Key
+            % press rightarrow or d to go to the next frame
             case 'rightarrow'
                 kp1_Callback(kp1, []);
             case 'd'
                 kp1_Callback(kp1, []);
+            % press leftarrow or a to go to the previous frame
             case 'leftarrow'
                 km1_Callback(km1, []);
             case 'a'

@@ -1,7 +1,2 @@
 f = figure;
-w = waitforbuttonpress;
-if w == 0
-    disp('Button click')
-else
-    disp('Key press')
-end
+set(f, 'KeyPressFcn', @(x,y)disp(get(f,'CurrentCharacter')))
