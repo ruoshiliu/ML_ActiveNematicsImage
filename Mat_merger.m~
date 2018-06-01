@@ -1,2 +1,0 @@
-d=dir('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/*.mat');
-for i = 1:length(d);

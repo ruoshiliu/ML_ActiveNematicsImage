@@ -58,6 +58,7 @@ function kp1_Callback(source,eventdata)
     nframe = k + 1;
 	k = k + 1;
     set(kValue,'Visible','on','string',num2str(k));
+    hold off;
     i = read(v, nframe);
     imshow(i,'InitialMagnification',220);
     display_collect();
@@ -69,6 +70,7 @@ function km1_Callback(source,eventdata)
         nframe = k - 1;
         k = k - 1;
         set(kValue,'Visible','on','string',num2str(k));
+        hold off;
         i = read(v, nframe);
         imshow(i,'InitialMagnification',220);
         display_collect();
@@ -80,6 +82,7 @@ function gotoK_Callback(source,eventdata)
     if k <= nframes && k>=0
         nframe = k;
         set(kValue,'Visible','on','string',num2str(k));
+        hold off;
         i = read(v, nframe);
         imshow(i,'InitialMagnification',220);
         display_collect();
