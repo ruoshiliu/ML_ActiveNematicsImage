@@ -106,7 +106,7 @@ end
 function end_Callback(source,eventdata) 
 %     mkdir pts_collected;
     filename = num2str(k) + ".mat";
-    name = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/' + filename;
+    name = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/neg' + filename;
     save(name,'pts_pos','pts_neg','k');
     close;
 end
@@ -134,11 +134,11 @@ end
         hold on;
 
         if waitforbuttonpress == 1 % press any key to start collecting
-            positive.Visible = 'on';
-            [x_pos,y_pos] = getpts(gca);
-            pts_pos(k).cdata = [x_pos,y_pos];
-            positive.Visible = 'off';
-            hold on;
+%             positive.Visible = 'on';
+%             [x_pos,y_pos] = getpts(gca);
+%             pts_pos(k).cdata = [x_pos,y_pos];
+%             positive.Visible = 'off';
+%             hold on;
             negative.Visible = 'on';
             [x_neg,y_neg] = getpts(gca);
             pts_neg(k).cdata = [x_neg,y_neg];
