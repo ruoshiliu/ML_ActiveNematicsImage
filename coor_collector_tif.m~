@@ -2,12 +2,13 @@ function coor_collector
 %% read video information
 clear variables;
  
-v = VideoReader('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d400um.avi');
 k = 0;
 
-nframes = v.duration * v.framerate;
+nframes = 100
 pts_pos(nframes).cdata = [];
 pts_neg(nframes).cdata = [];
+
+path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d300_lamp50_3_20171017/';
 %% construct GUI
 %  Create and then hide the UI as it is being constructed.
 f = figure('Visible','off','Position',[520,500,650,350],'KeyPressFcn', @keyPress)
@@ -59,7 +60,8 @@ function kp1_Callback(source,eventdata)
 	k = k + 1;
     set(kValue,'Visible','on','string',num2str(k));
     hold off;
-    i = read(v, nframe);
+    name = strcat(path, num2str(k+10000), '.tif');
+    i = imread(name);
     imshow(i,'InitialMagnification',220);
     display_collect();
 end
@@ -71,7 +73,8 @@ function km1_Callback(source,eventdata)
         k = k - 1;
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
-        i = read(v, nframe);
+        name = strcat(path, num2str(k+10000), '.tif');
+        i = imread(name);
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -83,7 +86,8 @@ function gotoK_Callback(source,eventdata)
         nframe = k;
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
-        i = read(v, nframe);
+        name = strcat(path, num2str(k+10000), '.tif');
+        i = imread(name);
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -106,7 +110,7 @@ end
 function end_Callback(source,eventdata) 
 %     mkdir pts_collected;
     filename = num2str(k) + ".mat";
-    name = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/neg/' + filename;
+    name = path + filename;
     save(name,'pts_pos','pts_neg','k');
     close;
 end
