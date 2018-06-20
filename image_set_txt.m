@@ -154,3 +154,63 @@ for r=1:size(neg_test,1)
     fprintf(fid,'%s\n',neg_test(r,:));
 end
 fclose(fid);
+
+
+
+
+
+
+
+
+%% train
+filename_train = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit/VOC2007/ImageSets/Main/train.txt';
+train = [];
+for i = 1:size(train_p,2)
+    image_name = sprintf('%06.0f',train_p(i));
+    train = [train; image_name];
+end
+
+fid = fopen(filename_train,'w');
+for r=1:size(train,1)
+    fprintf(fid,'%s\n',train(r,:));
+end
+fclose(fid);
+%% val
+filename_val = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit/VOC2007/ImageSets/Main/val.txt';
+val = [];
+for i = 1:size(val_p,2)
+    image_name = sprintf('%06.0f',val_p(i));
+    val = [val; image_name];
+end
+
+fid = fopen(filename_val,'w');
+for r=1:size(val,1)
+    fprintf(fid,'%s\n',val(r,:));
+end
+fclose(fid);
+%% trainval
+filename_train_val = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit/VOC2007/ImageSets/Main/trainval.txt';
+train_val = [];
+for i = 1:size(train_val_p,2)
+    image_name = sprintf('%06.0f',train_val_p(i));
+    train_val = [train_val; image_name];
+end
+
+fid = fopen(filename_train_val,'w');
+for r=1:size(train_val,1)
+    fprintf(fid,'%s\n',train_val(r,:));
+end
+fclose(fid);
+%% test
+filename_test = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit/VOC2007/ImageSets/Main/test.txt';
+test = [];
+for i = 1:size(test_p,2)
+    image_name = sprintf('%06.0f',test_p(i));
+    test = [test; image_name];
+end
+
+fid = fopen(filename_test,'w');
+for r=1:size(test,1)
+    fprintf(fid,'%s\n',test(r,:));
+end
+fclose(fid);
