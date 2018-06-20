@@ -2,23 +2,24 @@ function coor_collector
 %% read video information
 clear variables;
  
+v = VideoReader('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d400um.avi');
+load('pts_collected/7400.mat','pos','neg');
+load('/Users/ruoshiliu/Desktop/pts_rand.mat', 'pts_rand');
 k = 0;
 
-nframes = 100
-pts_pos(nframes).cdata = [];
-pts_neg(nframes).cdata = [];
-
-path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d300_lamp50_3_20171017/';
+nframes = v.duration * v.framerate;
+pts_pos = pos;
+pts_neg = neg; 
 %% construct GUI
 %  Create and then hide the UI as it is being constructed.
 f = figure('Visible','off','Position',[520,500,650,350],'KeyPressFcn', @keyPress)
 
 % Construct the components.
-pos = get(gcf, 'Position'); % get figure position
-left = pos(1);
-right = pos(2);
-width = pos(3);
-height = pos(4);
+pos_f = get(gcf, 'Position'); % get figure position
+left = pos_f(1);
+right = pos_f(2);
+width = pos_f(3);
+height = pos_f(4);
 
 
 % Indicator of total frame number
@@ -60,10 +61,9 @@ function kp1_Callback(source,eventdata)
 	k = k + 1;
     set(kValue,'Visible','on','string',num2str(k));
     hold off;
-    name = strcat(path, num2str(k+10000), '.tif');
-    i = imread(name);
+    i = read(v, nframe);
     imshow(i,'InitialMagnification',220);
-    display_collect();
+    display();
 end
  %% last frame
 function km1_Callback(source,eventdata) 
@@ -73,8 +73,7 @@ function km1_Callback(source,eventdata)
         k = k - 1;
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
-        name = strcat(path, num2str(k+10000), '.tif');
-        i = imread(name);
+        i = read(v, nframe);
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -86,8 +85,7 @@ function gotoK_Callback(source,eventdata)
         nframe = k;
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
-        name = strcat(path, num2str(k+10000), '.tif');
-        i = imread(name);
+        i = read(v, nframe);
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -110,7 +108,7 @@ end
 function end_Callback(source,eventdata) 
 %     mkdir pts_collected;
     filename = num2str(k) + ".mat";
-    name = path + filename;
+    name = '/Users/ruoshiliu/Desktop/' + filename;
     save(name,'pts_pos','pts_neg','k');
     close;
 end
@@ -131,6 +129,11 @@ end
             x = pts_pos(k).cdata(:,1);
             y = pts_pos(k).cdata(:,2);
             plot(x, y, 'r+', 'LineWidth', 1, 'MarkerSize', 10);
+        end
+        if ~isempty(pts_rand(k).cdata)
+            x = pts_rand(k).cdata(:,1);
+            y = pts_rand(k).cdata(:,2);
+            plot(x, y, 'c*', 'LineWidth', 1, 'MarkerSize', 10);
         end
     end
 %% collect

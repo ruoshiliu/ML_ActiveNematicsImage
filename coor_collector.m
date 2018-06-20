@@ -106,7 +106,7 @@ end
 function end_Callback(source,eventdata) 
 %     mkdir pts_collected;
     filename = num2str(k) + ".mat";
-    name = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/neg/' + filename;
+    name = '/Users/ruoshiliu/Desktop/' + filename;
     save(name,'pts_pos','pts_neg','k');
     close;
 end
