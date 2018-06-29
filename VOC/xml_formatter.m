@@ -4,12 +4,12 @@
 % cd VOC2007;
 % mkdir Annotations;
 % cd Annotations;
-load '/Users/ruoshiliu/Desktop/OneDrive/Github/ML_ActiveNematicsImage/pts_collected/d400um/7400.mat'
-sample_size = 80;
-height = 748;
-width = 736;
+load '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d300_lamp50_2_pos0_20171017/100.mat'
+sample_size = 55;
+height = 486;
+width = 486;
 
-for i = 1:count
+for i = 1:100
     docNode = com.mathworks.xml.XMLUtils.createDocument('annotation');
     %% folder
     folder_node = docNode.createElement('folder');
@@ -63,12 +63,12 @@ for i = 1:count
 
     width_node = docNode.createElement('width');
     size_node.appendChild(width_node);
-    width_text = docNode.createTextNode('736');
+    width_text = docNode.createTextNode(num2str(width));
     width_node.appendChild(width_text);
 
     height_node = docNode.createElement('height');
     size_node.appendChild(height_node);
-    height_text = docNode.createTextNode('748');
+    height_text = docNode.createTextNode(num2str(height));
     height_node.appendChild(height_text);
 
     depth_node = docNode.createElement('depth');
@@ -81,14 +81,14 @@ for i = 1:count
     segmented_text = docNode.createTextNode('0');
     segmented_node.appendChild(segmented_text);
     %% object
-    num_pos = size(pos(i).cdata,1);
-    num_neg = size(neg(i).cdata,1);
+    num_pos = size(pts_pos(i).cdata,1);
+    num_neg = size(pts_neg(i).cdata,1);
     for k1 = 1:num_pos
-        pos_i = pos(i).cdata(k1,:);
-        xmin = pos_i(1)-sample_size/2;
-        xmax = pos_i(1)+sample_size/2;
-        ymin = height - pos_i(2) - sample_size/2;
-        ymax = height - pos_i(2) + sample_size/2;
+        pos_i = pts_pos(i).cdata(k1,:);
+        xmin = round(pos_i(1)-sample_size/2);
+        xmax = round(pos_i(1)+sample_size/2);
+        ymin = round(height - pos_i(2) - sample_size/2);
+        ymax = round(height - pos_i(2) + sample_size/2);
         object_node = docNode.createElement('object');
         docNode.getDocumentElement.appendChild(object_node);
         
@@ -139,11 +139,11 @@ for i = 1:count
     end
     
     for k2 = 1:num_neg
-        neg_i = neg(i).cdata(k2,:);
-        xmin = neg_i(1)-sample_size/2;
-        xmax = neg_i(1)+sample_size/2;
-        ymin = height - neg_i(2) - sample_size/2;
-        ymax = height - neg_i(2) + sample_size/2;
+        neg_i = pts_neg(i).cdata(k2,:);
+        xmin = round(neg_i(1)-sample_size/2);
+        xmax = round(neg_i(1)+sample_size/2);
+        ymin = round(height - neg_i(2) - sample_size/2);
+        ymax = round(height - neg_i(2) + sample_size/2);
         object_node = docNode.createElement('object');
         docNode.getDocumentElement.appendChild(object_node);
         
@@ -192,8 +192,8 @@ for i = 1:count
         ymax_node.appendChild(ymax_text);
         
     end
-    name = sprintf('%06.0f.xml',i);
-    filename = strcat('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit/VOC2007/Annotations/', name);
+    name = sprintf('%06.0f.xml',i+7500);
+    filename = strcat('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit_d400_d300_mixed/VOC2007/Annotations/', name);
     xmlwrite(filename, docNode)
 end
         

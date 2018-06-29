@@ -1,7 +1,7 @@
 %% Setup
 % Create a temporary working folder to store the image sequence.
 %%
-workingDir = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/images';
+workingDir = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/images_yolo';
 %% Create VideoReader
 % Create a VideoReader to use for reading frames from the file.
 %%
@@ -23,7 +23,9 @@ ii = 1;
 
 while hasFrame(shuttleVideo)
    img = readFrame(shuttleVideo);
-   filename = [sprintf('%06.0f',ii) '.jpg'];
+   
+%    filename = [sprintf('%06.0f',ii) '.jpg'];
+   filename = ['images', num2str(ii), '.jpg'];
    fullname = fullfile(workingDir,filename);
    imwrite(img,fullname)    % Write out to a JPEG file (img1.jpg, img2.jpg, etc.)
    ii = ii+1;
