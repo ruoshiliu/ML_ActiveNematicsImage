@@ -1,13 +1,8 @@
 test_pos = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_pos.txt');
-test_neg = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_neg.txt');
-test_pos_o = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_pos_o.txt');
-test_neg_b = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_neg_b.txt');
-test_nuc = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_nuc.txt');
-test_nucb = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_nucb.txt');
-
+test_neg = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_pos.txt');
 test_set = unique(test_neg(:,1));
 frame = 1;
-path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d400_last2000/';
+path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d300_lamp50_3_20171017_jpg/';
 filename = [sprintf('%06.0f',frame) '.jpg'];
 name = strcat(path, filename);
 im = imread(name);

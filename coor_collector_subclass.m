@@ -3,13 +3,15 @@ function coor_collector
 clear variables;
 v = VideoReader('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d400um.avi');
 nframes = v.duration * v.framerate;
-pts_pos(nframes).cdata = [];
-pts_neg(nframes).cdata = [];
-pts_nucb(nframes).cdata = [];
-pts_nuc(nframes).cdata = [];
-load '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/nucleation_2c_7400.mat';
+load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/sub/7400.mat','pts_pos','pts_neg', 'pts_pos_o', 'pts_neg_b', 'k');
+load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/pos_neg/7400_sorted.mat','pos', 'neg');
 
+
+pts_pos_old = pos;
+pts_neg_old = neg;
+clear pos, neg;
 k = 0;
+xxx = [];
 
 
 
@@ -47,6 +49,12 @@ ktext2 = uicontrol('Style','text','String','k=','Position',[left+width*1.20,150,
 positive = uicontrol('Style','text','FontSize',12.5,'ForegroundColor','b','String','+1/2','Position',[left+width*1.25,350,35,15],'Visible','off');
 negative = uicontrol('Style','text','FontSize',12.5,'ForegroundColor','b','String','-1/2','Position',[left+width*1.25,350,35,15],'Visible','off');
 set(gcf, 'units', 'normalized', 'position', [0 0 1 1]);
+% Subclassify
+sub = uicontrol('Style','edit','String','0','Position',[left+width*1.27,500,150,25],'Callback',{@sub_Callback});
+% Save subclassification
+saveSub = uicontrol('Style','pushbutton','String','save','Position',[left+width*1.2,480,80,15],'Callback',{@saveSub_Callback});
+% "Sub Classes"
+ktext3 = uicontrol('Style','text','String','pos_o;neg_b','Position',[left+width*1.15,507,70,15]);
 
 % set(f,'KeyPressFcn',@KeyPressCb);
 ha = axes('Units','normalized','Position',[0.10,0.05,0.55,0.85]);
@@ -54,7 +62,7 @@ align([nfrms,kp1,km1,enter],'Center','None');
 
 f.Visible = 'on';
 
- 
+
 % Push button callbacks. Each callback plots current_data in the
 % specified plot type.
  %% next frame
@@ -65,6 +73,14 @@ function kp1_Callback(source,eventdata)
     set(kValue,'Visible','on','string',num2str(k));
     hold off;
     i = read(v, nframe);
+    if ~isempty(pts_pos_old(k).cdata)
+        txt_pos = 1:size(pts_pos_old(k).cdata,1);
+        i = insertText(i, pts_pos_old(k).cdata, txt_pos, 'BoxColor', 'blue', 'TextColor', 'white');
+    end
+    if ~isempty(pts_neg_old(k).cdata)
+        txt_neg = 1:size(pts_neg_old(k).cdata,1);
+        i = insertText(i, pts_neg_old(k).cdata, txt_neg,'BoxColor','red', 'TextColor', 'white');
+    end
     imshow(i,'InitialMagnification',220);
     display_collect();
 end
@@ -77,6 +93,14 @@ function km1_Callback(source,eventdata)
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
         i = read(v, nframe);
+        if ~isempty(pts_pos_old(k).cdata)
+            txt_pos = 1:size(pts_pos_old(k).cdata,1);
+            i = insertText(i, pts_pos_old(k).cdata, txt_pos, 'BoxColor', 'blue', 'TextColor', 'white');
+        end
+        if ~isempty(pts_neg_old(k).cdata)
+            txt_neg = 1:size(pts_neg_old(k).cdata, 1);
+            i = insertText(i, pts_neg_old(k).cdata, txt_neg,'BoxColor','red', 'TextColor', 'white');
+        end
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -89,6 +113,14 @@ function gotoK_Callback(source,eventdata)
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
         i = read(v, nframe);
+        if ~isempty(pts_pos(k).cdata)
+            txt_pos = 1:size(pts_pos(k).cdata,1);
+            i = insertText(i, pts_pos(k).cdata, txt_pos, 'BoxColor', 'blue', 'TextColor', 'white');
+        end
+        if ~isempty(pts_neg(k).cdata)
+            txt_neg = 1:size(pts_neg(k).cdata,1);
+            i = insertText(i, pts_neg(k).cdata, txt_neg,'BoxColor','red', 'TextColor', 'white');
+        end
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -99,6 +131,35 @@ function kequal_Callback(source,eventdata,handles)
 % Display contour plot of the currently selected data.
     current_string = get(source, 'String');
     k = str2double(current_string);
+end
+%%
+function sub_Callback(source,eventdata,handles) 
+% Display contour plot of the currently selected data.
+	current_string = get(source, 'String');
+    xxx = split(current_string, '.');
+end
+%% save subclassification coordinates
+function saveSub_Callback(source,eventdata) 
+% Display contour plot of the currently selected data.
+	if size(xxx,1) == 1
+        yyy = split(xxx(1),' ');
+        yyy = str2num(cell2mat(yyy)); 
+        pts_pos_o(k).cdata = pts_pos_old(k).cdata(yyy,:);
+        pts_pos(k).cdata = pts_pos_old(k).cdata;
+        pts_pos(k).cdata(yyy,:) = []; 
+    elseif size(xxx,1) == 2
+        yyy = split(xxx(1),' ');
+        yyy = str2num(cell2mat(yyy));
+        pts_pos_o(k).cdata = pts_pos_old(k).cdata(yyy,:);
+        pts_pos(k).cdata = pts_pos_old(k).cdata;
+        pts_pos(k).cdata(yyy,:) = [];
+        zzz = split(xxx(2),' ');
+        zzz = str2num(cell2mat(zzz));
+        pts_neg_b(k).cdata = pts_neg_old(k).cdata(zzz,:);
+        pts_neg(k).cdata = pts_neg_old(k).cdata;
+        pts_neg(k).cdata(zzz,:) = [];
+    end
+    display();
 end
 %% 
 function kValue_Callback(source,eventdata,handles) 
@@ -111,33 +172,42 @@ end
 function end_Callback(source,eventdata) 
 %     mkdir pts_collected;
     filename = num2str(k) + ".mat";
-    name = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/nuclea_without/' + filename;
-    save(name,'pts_pos','pts_neg', 'pts_nuc', 'pts_nucb','k');
+    name = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/' + filename;
+    save(name,'pts_pos','pts_neg', 'pts_pos_o', 'pts_neg_b','k');
     close;
 end
 %% display and collect
     function display_collect()
         display();
-        collect();
+%         collect();
     end
 %% display
     function display()
         hold on;
-        if ~isempty(pts_nuc(k).cdata)
-            x = pts_nuc(k).cdata(:,1);
-            y = pts_nuc(k).cdata(:,2);
+        if ~isempty(pts_pos(k).cdata)
+            x = pts_pos(k).cdata(:,1);
+            y = pts_pos(k).cdata(:,2);
             plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 20);
         end
-        if ~isempty(pts_nucb(k).cdata)
-            x = pts_nucb(k).cdata(:,1);
-            y = pts_nucb(k).cdata(:,2);
+        if ~isempty(pts_neg(k).cdata)
+            x = pts_neg(k).cdata(:,1);
+            y = pts_neg(k).cdata(:,2);
             plot(x, y, 'r+', 'LineWidth', 1, 'MarkerSize', 10);
+        end
+        if ~isempty(pts_pos_o(k).cdata)
+            x = pts_pos_o(k).cdata(:,1);
+            y = pts_pos_o(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 20);
+        end
+        if ~isempty(pts_neg_b(k).cdata)
+            x = pts_neg_b(k).cdata(:,1);
+            y = pts_neg_b(k).cdata(:,2);
+            plot(x, y, 'g+', 'LineWidth', 1, 'MarkerSize', 10);
         end
     end
 %% collect
     function collect(source, eventdata)
         hold on;
-
         if waitforbuttonpress == 1 % press any key to start collecting
             positive.Visible = 'on';
             [x_pos,y_pos] = getpts(gca);
@@ -149,7 +219,7 @@ end
 %             pts_neg(k).cdata = [x_neg,y_neg];
 %             negative.Visible = 'off';
 %             plot(x_neg, y_neg, 'g.', 'LineWidth', 1, 'MarkerSize', 20);
-            plot(x_pos, y_pos, 'y+', 'LineWidth', 1, 'MarkerSize', 10);
+%             plot(x_pos, y_pos, 'y+', 'LineWidth', 1, 'MarkerSize', 10);
         end  
     end
     function keyPress(source, eventdata)
@@ -164,6 +234,10 @@ end
                 km1_Callback(km1, []);
             case 'a'
                 km1_Callback(km1, []);
+            case 'return'
+                saveSub_Callback(saveSub,[]);
+            case 'f'
+                saveSub_Callback(saveSub,[]);
         end
     end
  
