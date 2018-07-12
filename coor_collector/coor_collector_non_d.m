@@ -3,13 +3,17 @@ function coor_collector
 clear variables;
  
 v = VideoReader('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d400um.avi');
-load('pts_collected/7400.mat','pos','neg');
-load('/Users/ruoshiliu/Desktop/pts_rand.mat', 'pts_rand');
+load '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/7400_4c_sorted.mat';
+load '/Users/ruoshiliu/Desktop/OneDrive/Github/ML_ActiveNematicsImage/pts_collected/d400um/pts_rand.mat';
 k = 0;
 
 nframes = v.duration * v.framerate;
-pts_pos = pos;
-pts_neg = neg; 
+pts_neg = pts_neg;
+pts_pos = pts_pos;
+pts_nuc = pts_nuc;
+pts_pos_o = pts_pos_o;
+pts_rand = pts_rand;
+
 %% construct GUI
 %  Create and then hide the UI as it is being constructed.
 f = figure('Visible','off','Position',[520,500,650,350],'KeyPressFcn', @keyPress)
@@ -123,12 +127,22 @@ end
         if ~isempty(pts_neg(k).cdata)
             x = pts_neg(k).cdata(:,1);
             y = pts_neg(k).cdata(:,2);
-            plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 20);
+            plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 10);
         end
         if ~isempty(pts_pos(k).cdata)
             x = pts_pos(k).cdata(:,1);
             y = pts_pos(k).cdata(:,2);
-            plot(x, y, 'r+', 'LineWidth', 1, 'MarkerSize', 10);
+            plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 10);
+        end
+        if ~isempty(pts_pos_o(k).cdata)
+            x = pts_pos_o(k).cdata(:,1);
+            y = pts_pos_o(k).cdata(:,2);
+            plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 10);
+        end
+        if ~isempty(pts_nuc(k).cdata)
+            x = pts_nuc(k).cdata(:,1);
+            y = pts_nuc(k).cdata(:,2);
+            plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 10);
         end
         if ~isempty(pts_rand(k).cdata)
             x = pts_rand(k).cdata(:,1);
