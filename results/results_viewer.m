@@ -4,27 +4,30 @@ clear variables;
 
 k = 1;
 nframes = 13000;
-thres_pos = 0;
-thres_neg = 0;
-thres_pos_o = 0;
-thres_neg_b = 0;
-thres_nuc = 0;
-thres_nucb = 0;
-path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d400_last2000/';
+thres_pos = 0.3;
+thres_neg = 0.1;
+thres_pos_o = 0.3;
+% thres_neg_b = 0;
+thres_nuc = 0.1;
+% thres_nucb = 0;
+% thres_rand = 1;
+path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/images/';
 
-test_pos = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_pos.txt');
-test_neg = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_neg.txt');
-test_pos_o = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_pos_o.txt');
-test_neg_b = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_neg_b.txt');
-test_nuc = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_nuc.txt');
-test_nucb = importdata('/Users/ruoshiliu/Desktop/tests/d400_last2000/comp4_det_test_nucb.txt');
+test_pos = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_pos.txt');
+test_neg = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_neg.txt');
+test_pos_o = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_pos_o.txt');
+% test_neg_b = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_neg_b.txt');
+test_nuc = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_nuc.txt');
+% test_nucb = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_nucb.txt');
+% test_rand = importdata('/Users/ruoshiliu/Desktop/tests/train6v1/comp4_det_test_rand.txt');
 
 test_set_neg = unique(test_neg(:,1));
 test_set_pos = unique(test_pos(:,1));
-test_set_neg_b = unique(test_neg_b(:,1));
+% test_set_neg_b = unique(test_neg_b(:,1));
 test_set_pos_o = unique(test_pos_o(:,1));
 test_set_nuc = unique(test_nuc(:,1));
-test_set_nucb = unique(test_nucb(:,1));
+% test_set_nucb = unique(test_nucb(:,1));
+% test_set_rand = unique(test_rand(:,1));
 
 im_temp = [sprintf('%06.0f', 11001) '.jpg'];
 im_name = strcat(path, im_temp);
@@ -36,9 +39,9 @@ clear pts_pos pts_neg;
 pts_pos(size(test_set_pos,1)).cdata = [];
 pts_neg(size(test_set_pos,1)).cdata = [];
 pts_pos_o(size(test_set_pos,1)).cdata = [];
-pts_neg_b(size(test_set_pos,1)).cdata = [];
+% pts_neg_b(size(test_set_pos,1)).cdata = [];
 pts_nuc(size(test_set_pos,1)).cdata = [];
-pts_nucb(size(test_set_pos,1)).cdata = [];
+% pts_nucb(size(test_set_pos,1)).cdata = [];
 
 for m = 1:size(test_set_pos,1)
     frame = test_set_pos(m,1);
@@ -134,36 +137,36 @@ for m = 1:size(test_set_pos,1)
     end
     pts_pos_o(m).cdata = rec;
     
-    %% neg_b
-    num_lab = 0;
-    for i = 1:size(test_neg_b,1)
-        if test_neg_b(i,1) == frame
-            num_lab = num_lab + 1;
-        end
-    end
-    first_ele = 1;
-    while test_neg_b(first_ele,1) ~= frame && first_ele < size(test_neg_b,1)
-        first_ele = first_ele+1;
-    end
-    first_ele = first_ele-1;
-    lab_list = [];
-    for i = 1:num_lab
-        if test_neg_b(first_ele+i,2) >= thres_neg_b
-            lab_list = [lab_list; test_neg_b(first_ele+i,:)];
-        end
-    end
-    rec = [];
-    for i = 1:size(lab_list,1)
-        xmin = lab_list(i,3);
-        ymax = height - lab_list(i,4); 
-        xmax = lab_list(i,5);
-        ymin = height - lab_list(i,6);
-        w = ymax - ymin;
-        h = xmax - xmin;
-    %     rectangle('Position',[xmin,xmax,ymax,ymin],'LineWidth',0.5,'LineStyle','-','EdgeColor','r');
-        rec = [rec; xmin ymin w h lab_list(i,2)];
-    end
-    pts_neg_b(m).cdata = rec;
+%     %% neg_b
+%     num_lab = 0;
+%     for i = 1:size(test_neg_b,1)
+%         if test_neg_b(i,1) == frame
+%             num_lab = num_lab + 1;
+%         end
+%     end
+%     first_ele = 1;
+%     while test_neg_b(first_ele,1) ~= frame && first_ele < size(test_neg_b,1)
+%         first_ele = first_ele+1;
+%     end
+%     first_ele = first_ele-1;
+%     lab_list = [];
+%     for i = 1:num_lab
+%         if test_neg_b(first_ele+i,2) >= thres_neg_b
+%             lab_list = [lab_list; test_neg_b(first_ele+i,:)];
+%         end
+%     end
+%     rec = [];
+%     for i = 1:size(lab_list,1)
+%         xmin = lab_list(i,3);
+%         ymax = height - lab_list(i,4); 
+%         xmax = lab_list(i,5);
+%         ymin = height - lab_list(i,6);
+%         w = ymax - ymin;
+%         h = xmax - xmin;
+%     %     rectangle('Position',[xmin,xmax,ymax,ymin],'LineWidth',0.5,'LineStyle','-','EdgeColor','r');
+%         rec = [rec; xmin ymin w h lab_list(i,2)];
+%     end
+%     pts_neg_b(m).cdata = rec;
     
     %% nuc
     num_lab = 0;
@@ -196,36 +199,67 @@ for m = 1:size(test_set_pos,1)
     end
     pts_nuc(m).cdata = rec;
     
-    %% nucb
-    num_lab = 0;
-    for i = 1:size(test_nucb,1)
-        if test_nucb(i,1) == frame
-            num_lab = num_lab + 1;
-        end
-    end
-    first_ele = 1;
-    while test_nucb(first_ele,1) ~= frame && first_ele < size(test_nucb,1)
-        first_ele = first_ele+1;
-    end
-    first_ele = first_ele-1;
-    lab_list = [];
-    for i = 1:num_lab
-        if test_nucb(first_ele+i,2) >= thres_nucb
-            lab_list = [lab_list; test_nucb(first_ele+i,:)];
-        end
-    end
-    rec = [];
-    for i = 1:size(lab_list,1)
-        xmin = lab_list(i,3);
-        ymax = height - lab_list(i,4); 
-        xmax = lab_list(i,5);
-        ymin = height - lab_list(i,6);
-        w = ymax - ymin;
-        h = xmax - xmin;
-    %     rectangle('Position',[xmin,xmax,ymax,ymin],'LineWidth',0.5,'LineStyle','-','EdgeColor','r');
-        rec = [rec; xmin ymin w h lab_list(i,2)];
-    end
-    pts_nucb(m).cdata = rec;
+%     %% nucb
+%     num_lab = 0;
+%     for i = 1:size(test_nucb,1)
+%         if test_nucb(i,1) == frame
+%             num_lab = num_lab + 1;
+%         end
+%     end
+%     first_ele = 1;
+%     while test_nucb(first_ele,1) ~= frame && first_ele < size(test_nucb,1)
+%         first_ele = first_ele+1;
+%     end
+%     first_ele = first_ele-1;
+%     lab_list = [];
+%     for i = 1:num_lab
+%         if test_nucb(first_ele+i,2) >= thres_nucb
+%             lab_list = [lab_list; test_nucb(first_ele+i,:)];
+%         end
+%     end
+%     rec = [];
+%     for i = 1:size(lab_list,1)
+%         xmin = lab_list(i,3);
+%         ymax = height - lab_list(i,4); 
+%         xmax = lab_list(i,5);
+%         ymin = height - lab_list(i,6);
+%         w = ymax - ymin;
+%         h = xmax - xmin;
+%     %     rectangle('Position',[xmin,xmax,ymax,ymin],'LineWidth',0.5,'LineStyle','-','EdgeColor','r');
+%         rec = [rec; xmin ymin w h lab_list(i,2)];
+%     end
+%     pts_nucb(m).cdata = rec;
+
+%     %% rand
+%     num_lab = 0;
+%     for i = 1:size(test_rand,1)
+%         if test_rand(i,1) == frame
+%             num_lab = num_lab + 1;
+%         end
+%     end
+%     first_ele = 1;
+%     while test_rand(first_ele,1) ~= frame && first_ele < size(test_rand,1)
+%         first_ele = first_ele+1;
+%     end
+%     first_ele = first_ele-1;
+%     lab_list = [];
+%     for i = 1:num_lab
+%         if test_rand(first_ele+i,2) >= thres_rand
+%             lab_list = [lab_list; test_rand(first_ele+i,:)];
+%         end
+%     end
+%     rec = [];
+%     for i = 1:size(lab_list,1)
+%         xmin = lab_list(i,3);
+%         ymax = height - lab_list(i,4); 
+%         xmax = lab_list(i,5);
+%         ymin = height - lab_list(i,6);
+%         w = ymax - ymin;
+%         h = xmax - xmin;
+%     %     rectangle('Position',[xmin,xmax,ymax,ymin],'LineWidth',0.5,'LineStyle','-','EdgeColor','r');
+%         rec = [rec; xmin ymin w h lab_list(i,2)];
+%     end
+%     pts_rand(m).cdata = rec;
 end
 
 
@@ -299,18 +333,23 @@ function kp1_Callback(source,eventdata)
         txt_pos_o = pts_pos_o(k).cdata(:,5);
         i = insertText(i, pts_pos_o(k).cdata(:,1:2), txt_pos_o, 'BoxColor', 'blue', 'TextColor', 'white');
     end
-    if ~isempty(pts_neg_b(k).cdata)
-        txt_neg_b = pts_neg_b(k).cdata(:,5);
-        i = insertText(i, pts_neg_b(k).cdata(:,1:2), txt_neg_b, 'BoxColor', 'blue', 'TextColor', 'white');
-    end
+%     if ~isempty(pts_neg_b(k).cdata)
+%         txt_neg_b = pts_neg_b(k).cdata(:,5);
+%         i = insertText(i, pts_neg_b(k).cdata(:,1:2), txt_neg_b, 'BoxColor', 'blue', 'TextColor', 'white');
+%     end
     if ~isempty(pts_nuc(k).cdata)
         txt_nuc = pts_nuc(k).cdata(:,5);
         i = insertText(i, pts_nuc(k).cdata(:,1:2), txt_nuc, 'BoxColor', 'blue', 'TextColor', 'white');
     end
-    if ~isempty(pts_nucb(k).cdata)
-        txt_nucb = pts_nucb(k).cdata(:,5);
-        i = insertText(i, pts_nucb(k).cdata(:,1:2), txt_nucb, 'BoxColor', 'blue', 'TextColor', 'white');
-    end
+%     if ~isempty(pts_nucb(k).cdata)
+%         txt_nucb = pts_nucb(k).cdata(:,5);
+%         i = insertText(i, pts_nucb(k).cdata(:,1:2), txt_nucb, 'BoxColor', 'blue', 'TextColor', 'white');
+%     end
+
+%     if ~isempty(pts_rand(k).cdata)
+%         txt_rand = pts_rand(k).cdata(:,5);
+%         i = insertText(i, pts_rand(k).cdata(:,1:2), txt_rand, 'BoxColor', 'blue', 'TextColor', 'white');
+%     end
 
     %% display bbox
     imshow(i,'InitialMagnification',220);
@@ -337,13 +376,13 @@ function kp1_Callback(source,eventdata)
         h = pts_pos_o(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','y');
     end
-    for i_rec = 1:size(pts_neg_b(nframe).cdata,1)
-        xmin = pts_neg_b(nframe).cdata(i_rec,1);
-        ymin = pts_neg_b(nframe).cdata(i_rec,2);
-        w = pts_neg_b(nframe).cdata(i_rec,3);
-        h = pts_neg_b(nframe).cdata(i_rec,4);
-        rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','w');
-    end
+%     for i_rec = 1:size(pts_neg_b(nframe).cdata,1)
+%         xmin = pts_neg_b(nframe).cdata(i_rec,1);
+%         ymin = pts_neg_b(nframe).cdata(i_rec,2);
+%         w = pts_neg_b(nframe).cdata(i_rec,3);
+%         h = pts_neg_b(nframe).cdata(i_rec,4);
+%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','w');
+%     end
     for i_rec = 1:size(pts_nuc(nframe).cdata,1)
         xmin = pts_nuc(nframe).cdata(i_rec,1);
         ymin = pts_nuc(nframe).cdata(i_rec,2);
@@ -351,13 +390,21 @@ function kp1_Callback(source,eventdata)
         h = pts_nuc(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','m');
     end
-    for i_rec = 1:size(pts_nucb(nframe).cdata,1)
-        xmin = pts_nucb(nframe).cdata(i_rec,1);
-        ymin = pts_nucb(nframe).cdata(i_rec,2);
-        w = pts_nucb(nframe).cdata(i_rec,3);
-        h = pts_nucb(nframe).cdata(i_rec,4);
-        rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','b');
-    end
+%     for i_rec = 1:size(pts_nucb(nframe).cdata,1)
+%         xmin = pts_nucb(nframe).cdata(i_rec,1);
+%         ymin = pts_nucb(nframe).cdata(i_rec,2);
+%         w = pts_nucb(nframe).cdata(i_rec,3);
+%         h = pts_nucb(nframe).cdata(i_rec,4);
+%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','b');
+%     end
+
+%     for i_rec = 1:size(pts_rand(nframe).cdata,1)
+%         xmin = pts_rand(nframe).cdata(i_rec,1);
+%         ymin = pts_rand(nframe).cdata(i_rec,2);
+%         w = pts_rand(nframe).cdata(i_rec,3);
+%         h = pts_rand(nframe).cdata(i_rec,4);
+%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','m');
+%     end
     hold off;
 end
  %% last frame
@@ -385,18 +432,18 @@ function km1_Callback(source,eventdata)
         txt_pos_o = pts_pos_o(k).cdata(:,5);
         i = insertText(i, pts_pos_o(k).cdata(:,1:2), txt_pos_o, 'BoxColor', 'blue', 'TextColor', 'white');
     end
-    if ~isempty(pts_neg_b(k).cdata)
-        txt_neg_b = pts_neg_b(k).cdata(:,5);
-        i = insertText(i, pts_neg_b(k).cdata(:,1:2), txt_neg_b, 'BoxColor', 'blue', 'TextColor', 'white');
-    end
+%     if ~isempty(pts_neg_b(k).cdata)
+%         txt_neg_b = pts_neg_b(k).cdata(:,5);
+%         i = insertText(i, pts_neg_b(k).cdata(:,1:2), txt_neg_b, 'BoxColor', 'blue', 'TextColor', 'white');
+%     end
     if ~isempty(pts_nuc(k).cdata)
         txt_nuc = pts_nuc(k).cdata(:,5);
         i = insertText(i, pts_nuc(k).cdata(:,1:2), txt_nuc, 'BoxColor', 'blue', 'TextColor', 'white');
     end
-    if ~isempty(pts_nucb(k).cdata)
-        txt_nucb = pts_nucb(k).cdata(:,5);
-        i = insertText(i, pts_nucb(k).cdata(:,1:2), txt_nucb, 'BoxColor', 'blue', 'TextColor', 'white');
-    end
+%     if ~isempty(pts_nucb(k).cdata)
+%         txt_nucb = pts_nucb(k).cdata(:,5);
+%         i = insertText(i, pts_nucb(k).cdata(:,1:2), txt_nucb, 'BoxColor', 'blue', 'TextColor', 'white');
+%     end
 
     %% display bbox
     imshow(i,'InitialMagnification',220);
@@ -422,13 +469,13 @@ function km1_Callback(source,eventdata)
         h = pts_pos_o(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','y');
     end
-    for i_rec = 1:size(pts_neg_b(nframe).cdata,1)
-        xmin = pts_neg_b(nframe).cdata(i_rec,1);
-        ymin = pts_neg_b(nframe).cdata(i_rec,2);
-        w = pts_neg_b(nframe).cdata(i_rec,3);
-        h = pts_neg_b(nframe).cdata(i_rec,4);
-        rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','w');
-    end
+%     for i_rec = 1:size(pts_neg_b(nframe).cdata,1)
+%         xmin = pts_neg_b(nframe).cdata(i_rec,1);
+%         ymin = pts_neg_b(nframe).cdata(i_rec,2);
+%         w = pts_neg_b(nframe).cdata(i_rec,3);
+%         h = pts_neg_b(nframe).cdata(i_rec,4);
+%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','w');
+%     end
     for i_rec = 1:size(pts_nuc(nframe).cdata,1)
         xmin = pts_nuc(nframe).cdata(i_rec,1);
         ymin = pts_nuc(nframe).cdata(i_rec,2);
@@ -436,13 +483,13 @@ function km1_Callback(source,eventdata)
         h = pts_nuc(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','m');
     end
-    for i_rec = 1:size(pts_nucb(nframe).cdata,1)
-        xmin = pts_nucb(nframe).cdata(i_rec,1);
-        ymin = pts_nucb(nframe).cdata(i_rec,2);
-        w = pts_nucb(nframe).cdata(i_rec,3);
-        h = pts_nucb(nframe).cdata(i_rec,4);
-        rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','b');
-    end
+%     for i_rec = 1:size(pts_nucb(nframe).cdata,1)
+%         xmin = pts_nucb(nframe).cdata(i_rec,1);
+%         ymin = pts_nucb(nframe).cdata(i_rec,2);
+%         w = pts_nucb(nframe).cdata(i_rec,3);
+%         h = pts_nucb(nframe).cdata(i_rec,4);
+%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','b');
+%     end
     hold off;
 end
 %% go to frame

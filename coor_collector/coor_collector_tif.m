@@ -4,21 +4,31 @@ clear variables;
  
 k = 0;
 
-nframes = 100
-pts_pos(nframes).cdata = [];
-pts_neg(nframes).cdata = [];
+nframes = 0;
 
-path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d200_3_pos0_20171016/';
+load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/train6v1/7450_6c.mat', 'pts_neg', 'pts_pos', 'pts_neg_b', 'pts_pos_o', 'pts_nuc', 'pts_nucb');
+neg = pts_neg;
+pos = pts_pos;
+neg_b = pts_neg_b;
+pos_o = pts_pos_o;
+nuc = pts_nuc;
+nucb = pts_nucb;
+
+clear pts_neg pts_pos pts_neg_b pts_pos_o pts_nuc pts_nucb;
+
+
+
+path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/train6v1/images6v1/';
 %% construct GUI
 %  Create and then hide the UI as it is being constructed.
-f = figure('Visible','off','Position',[520,500,650,350],'KeyPressFcn', @keyPress)
+f = figure('Visible','off','Position',[320,500,650,350],'KeyPressFcn', @keyPress)
 
 % Construct the components.
-pos = get(gcf, 'Position'); % get figure position
-left = pos(1);
-right = pos(2);
-width = pos(3);
-height = pos(4);
+posi = get(gcf, 'Position'); % get figure position
+left = posi(1);
+right = posi(2);
+width = posi(3);
+height = posi(4);
 
 
 % Indicator of total frame number
@@ -40,8 +50,12 @@ end_button = uicontrol('Style','pushbutton','String','END','BackgroundColor','re
 % "K="
 ktext2 = uicontrol('Style','text','String','k=','Position',[left+width*1.20,150,15,15]);
 % +1/2 or -1/2
-positive = uicontrol('Style','text','FontSize',12.5,'ForegroundColor','b','String','+1/2','Position',[left+width*1.25,350,35,15],'Visible','off');
-negative = uicontrol('Style','text','FontSize',12.5,'ForegroundColor','b','String','-1/2','Position',[left+width*1.25,350,35,15],'Visible','off');
+positive = uicontrol('Style','text','FontSize',16,'ForegroundColor','r','String','pos','Position',[left+width*1.24,350,50,25],'Visible','off');
+negative = uicontrol('Style','text','FontSize',16,'ForegroundColor','r','String','neg','Position',[left+width*1.24,350,50,25],'Visible','off');
+positive_o = uicontrol('Style','text','FontSize',16,'ForegroundColor','r','String','pos_o','Position',[left+width*1.24,350,50,25],'Visible','off');
+negative_b = uicontrol('Style','text','FontSize',16,'ForegroundColor','r','String','neg_b','Position',[left+width*1.24,350,50,25],'Visible','off');
+nucleation = uicontrol('Style','text','FontSize',16,'ForegroundColor','r','String','nuc','Position',[left+width*1.24,350,50,25],'Visible','off');
+nucleation_b = uicontrol('Style','text','FontSize',16,'ForegroundColor','r','String','nucb','Position',[left+width*1.24,350,50,25],'Visible','off');
 set(gcf, 'units', 'normalized', 'position', [0 0 1 1]);
 
 % set(f,'KeyPressFcn',@KeyPressCb);
@@ -60,8 +74,8 @@ function kp1_Callback(source,eventdata)
 	k = k + 1;
     set(kValue,'Visible','on','string',num2str(k));
     hold off;
-    name = strcat(path, num2str(k+10000), '.tif');
-    i = imread(name);
+        filename_jpg = [path sprintf('%06.0f',k) '.jpg'];
+        i = imread(filename_jpg);
     imshow(i,'InitialMagnification',220);
     display_collect();
 end
@@ -73,8 +87,8 @@ function km1_Callback(source,eventdata)
         k = k - 1;
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
-        name = strcat(path, num2str(k+10000), '.tif');
-        i = imread(name);
+        filename_jpg = [path sprintf('%06.0f',k) '.jpg'];
+        i = imread(filename_jpg);
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -86,8 +100,8 @@ function gotoK_Callback(source,eventdata)
         nframe = k;
         set(kValue,'Visible','on','string',num2str(k));
         hold off;
-        name = strcat(path, num2str(k+10000), '.tif');
-        i = imread(name);
+        filename_jpg = [path sprintf('%06.0f',k) '.jpg'];
+        i = imread(filename_jpg);
         imshow(i,'InitialMagnification',220);
         display_collect();
     end
@@ -109,9 +123,16 @@ end
 %% end and save
 function end_Callback(source,eventdata) 
 %     mkdir pts_collected;
-    filename = num2str(k) + ".mat";
-    name = path + filename;
-    save(name,'pts_pos','pts_neg','k');
+    filename = num2str(k) + "_6c.mat";
+    savePath = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/train6v1/';
+    name = savePath + filename;
+    pts_pos = pos;
+    pts_neg = neg;
+    pts_pos_o = pos_o;
+    pts_neg_b = neg_b;
+    pts_nuc = nuc;
+    pts_nucb = nucb;
+    save(name,'pts_neg', 'pts_pos', 'pts_neg_b', 'pts_pos_o', 'pts_nuc', 'pts_nucb','k');
     close;
 end
 %% display and collect
@@ -122,33 +143,100 @@ end
 %% display
     function display()
         hold on;
-        if ~isempty(pts_neg(k).cdata)
-            x = pts_neg(k).cdata(:,1);
-            y = pts_neg(k).cdata(:,2);
-            plot(x, y, 'b.', 'LineWidth', 1, 'MarkerSize', 20);
+        if ~isempty(neg(k).cdata)
+            x = neg(k).cdata(:,1);
+            y = neg(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x,y,'neg', 'color','red','FontSize',15);
         end
-        if ~isempty(pts_pos(k).cdata)
-            x = pts_pos(k).cdata(:,1);
-            y = pts_pos(k).cdata(:,2);
-            plot(x, y, 'r+', 'LineWidth', 1, 'MarkerSize', 10);
+        if ~isempty(pos(k).cdata)
+            x = pos(k).cdata(:,1);
+            y = pos(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x,y,'pos', 'color','green','FontSize',15);
+        end
+        if ~isempty(pos_o(k).cdata)
+            x = pos_o(k).cdata(:,1);
+            y = pos_o(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x,y,'posEmp', 'color','yellow','FontSize',15);
+        end
+        if ~isempty(neg_b(k).cdata)
+            x = neg_b(k).cdata(:,1);
+            y = neg_b(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x,y,'negBoun', 'color','white','FontSize',15);
+        end
+        if ~isempty(nuc(k).cdata)
+            x = nuc(k).cdata(:,1);
+            y = nuc(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x,y,'nuc', 'color','m','FontSize',15);
+        end
+        if ~isempty(nucb(k).cdata)
+            x = nucb(k).cdata(:,1);
+            y = nucb(k).cdata(:,2);
+            plot(x, y, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x,y,'nucBoun', 'color','blue','FontSize',15);
         end
     end
 %% collect
     function collect(source, eventdata)
         hold on;
-
         if waitforbuttonpress == 1 % press any key to start collecting
             positive.Visible = 'on';
             [x_pos,y_pos] = getpts(gca);
-            pts_pos(k).cdata = [x_pos,y_pos];
+            pos(k).cdata = [x_pos,y_pos];
             positive.Visible = 'off';
             hold on;
+            
             negative.Visible = 'on';
             [x_neg,y_neg] = getpts(gca);
-            pts_neg(k).cdata = [x_neg,y_neg];
+            neg(k).cdata = [x_neg,y_neg];
             negative.Visible = 'off';
-            plot(x_neg, y_neg, 'g.', 'LineWidth', 1, 'MarkerSize', 20);
-            plot(x_pos, y_pos, 'y+', 'LineWidth', 1, 'MarkerSize', 10);
+            
+            hold on;
+            
+            positive_o.Visible = 'on';
+            [x_pos_o,y_pos_o] = getpts(gca);
+            pos_o(k).cdata = [x_pos_o,y_pos_o];
+            positive_o.Visible = 'off';
+            hold on;
+            
+            negative_b.Visible = 'on';
+            [x_neg_b,y_neg_b] = getpts(gca);
+            neg_b(k).cdata = [x_neg_b,y_neg_b];
+            negative_b.Visible = 'off';
+            hold on;
+            
+            nucleation.Visible = 'on';
+            [x_nuc,y_nuc] = getpts(gca);
+            nuc(k).cdata = [x_nuc,y_nuc];
+            nucleation.Visible = 'off';
+            hold on;
+            
+            nucleation_b.Visible = 'on';
+            [x_nucb,y_nucb] = getpts(gca);
+            nucb(k).cdata = [x_nucb,y_nucb];
+            nucleation_b.Visible = 'off';
+            
+            plot(x_neg, y_neg, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x_neg,y_neg,'neg', 'color','red','FontSize',15);
+            
+            plot(x_pos, y_pos, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x_pos,y_pos,'pos', 'color','green','FontSize',15);
+            
+            plot(x_pos_o, y_pos_o, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x_pos_o,y_pos_o,'posEmp', 'color','yellow','FontSize',15);
+            
+            plot(x_neg_b, y_neg_b, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x_neg_b,y_neg_b,'negBoun', 'color','white','FontSize',15);
+
+            plot(x_nuc, y_nuc, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x_nuc,y_nuc,'nuc', 'color','m','FontSize',15);
+
+            plot(x_nucb, y_nucb, 'y.', 'LineWidth', 1, 'MarkerSize', 10);
+            text(x_nucb,y_nucb,'nucBoun', 'color','blue','FontSize',15);
         end  
     end
     function keyPress(source, eventdata)
