@@ -2,11 +2,11 @@ function coor_collector
 %% read video information
 clear variables;
  
-k = 0;
+k = 0;  
 
 nframes = 0;
 
-load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/train6v1/7450_6c.mat', 'pts_neg', 'pts_pos', 'pts_neg_b', 'pts_pos_o', 'pts_nuc', 'pts_nucb');
+load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/train6v1/8772_6c.mat', 'pts_neg', 'pts_pos', 'pts_neg_b', 'pts_pos_o', 'pts_nuc', 'pts_nucb');
 neg = pts_neg;
 pos = pts_pos;
 neg_b = pts_neg_b;
@@ -21,7 +21,7 @@ clear pts_neg pts_pos pts_neg_b pts_pos_o pts_nuc pts_nucb;
 path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/train6v1/images6v1/';
 %% construct GUI
 %  Create and then hide the UI as it is being constructed.
-f = figure('Visible','off','Position',[320,500,650,350],'KeyPressFcn', @keyPress)
+f = figure('Visible','off','Position',[520,500,650,350],'KeyPressFcn', @keyPress)
 
 % Construct the components.
 posi = get(gcf, 'Position'); % get figure position
