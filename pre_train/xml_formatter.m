@@ -1,20 +1,25 @@
-% mkdir VOCdevkit;
-% cd VOCdevkit;
-% mkdir VOC2007;
-% cd VOC2007;
-% mkdir Annotations;
-% cd Annotations;
-load '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/7400_5c_background.mat'
-sample_size = 55;
-height = 748;
-width = 736;
+% This script is used to generate xml file for labeled images according to
+% the VOC Pascal format. This process needs to be done prior to the
+% training. To run it, you need to load the annotation ".mat" file and
+% provide the path of where the images are located.
 
-size_pos = 80;
-size_neg = 100;
-size_pos_o = 120;
-size_nuc = 120;
+
+load '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/90000_4c.mat'
+path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit_4v1_local/VOC2007/JPEGImages/';
+
+
 % size_rand = 100; % negative box size
-for i = 1:7400
+for i = 1:90000
+    i
+    filename = [sprintf('%06.0f',i) '.jpg'];
+    ii = imread(strcat(path, filename));
+    width = size(ii,2);
+    height = size(ii,1);
+    size_pos = ceil(120/742*width);
+    size_neg = ceil(120/742*width);
+    size_pos_o = ceil(160/742*width);
+    size_nuc = ceil(160/742*width);
+    
     docNode = com.mathworks.xml.XMLUtils.createDocument('annotation');
     %% folder
     folder_node = docNode.createElement('folder');
@@ -24,7 +29,7 @@ for i = 1:7400
     %% filename
     filename_node = docNode.createElement('filename');
     docNode.getDocumentElement.appendChild(filename_node);
-    filename_text = docNode.createTextNode('000001.jpg');
+    filename_text = docNode.createTextNode(sprintf('%06.0f.jpg',i));
     filename_node.appendChild(filename_text);
     %% source
     source_node = docNode.createElement('source');
@@ -92,7 +97,7 @@ for i = 1:7400
 %     num_neg_b = size(pts_neg_b(i).cdata,1);
     num_nuc = size(pts_nuc(i).cdata,1);
 %     num_nucb = size(pts_nucb(i).cdata,1);
-    num_rand = size(pts_rand(i).cdata,1);
+%     num_rand = size(pts_rand(i).cdata,1);
 %% pos    
     for k1 = 1:num_pos
         pos_i = pts_pos(i).cdata(k1,:);
@@ -481,7 +486,7 @@ for i = 1:7400
 %         
 %     end
     name = sprintf('%06.0f.xml',i);
-    filename = strcat('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit_4c/VOC2007/Annotations/', name);
+    filename = strcat('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit_4v1_local/VOC2007/Annotations/', name);
     xmlwrite(filename, docNode)
 end
 

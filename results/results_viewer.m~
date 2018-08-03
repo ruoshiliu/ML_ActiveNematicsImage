@@ -38,7 +38,7 @@ test_set_nuc = unique(test_nuc(:,1));
 % test_set_nucb = unique(test_nucb(:,1));
 % test_set_rand = unique(test_rand(:,1));
 
-im_temp = [sprintf('%06.0f', 1) '.jpg'];
+im_temp = [sprintf('%06.0f', 8801) '.jpg'];
 im_name = strcat(path, im_temp);
 im = imread(im_name);
 height = size(im,1);
@@ -275,8 +275,6 @@ for iii = 1:size(pts_pos,1)
 end
 
 for iii = 1:size(pts_pos_truth,1)
-    pts_pos_truth(iii).cdata = [pts_pos_truth(iii).cdata; pts_pos_o_truth(iii).cdata];
-end
     
 
 
@@ -345,10 +343,10 @@ function kp1_Callback(source,eventdata)
         txt_neg = pts_neg(k).cdata(:,5);
         i = insertText(i, pts_neg(k).cdata(:,1:2), txt_neg, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
     end
-%     if ~isempty(pts_pos_o(k).cdata)
-%         txt_pos_o = pts_pos_o(k).cdata(:,5);
-%         i = insertText(i, pts_pos_o(k).cdata(:,1:2), txt_pos_o, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
-%     end
+    if ~isempty(pts_pos_o(k).cdata)
+        txt_pos_o = pts_pos_o(k).cdata(:,5);
+        i = insertText(i, pts_pos_o(k).cdata(:,1:2), txt_pos_o, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
+    end
 %     if ~isempty(pts_neg_b(k).cdata)
 %         txt_neg_b = pts_neg_b(k).cdata(:,5);
 %         i = insertText(i, pts_neg_b(k).cdata(:,1:2), txt_neg_b, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
@@ -398,18 +396,18 @@ function kp1_Callback(source,eventdata)
     end
     
     
-%     for i_rec = 1:size(pts_pos_o(nframe).cdata,1)
-%         xmin = pts_pos_o(nframe).cdata(i_rec,1);
-%         ymin = pts_pos_o(nframe).cdata(i_rec,2);
-%         w = pts_pos_o(nframe).cdata(i_rec,3);
-%         h = pts_pos_o(nframe).cdata(i_rec,4);
-%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','y');
-%     end
-%     for i_rec = 1:size(pts_pos_o_truth(k_test).cdata,1)
-%         xmin = pts_pos_o_truth(k_test).cdata(i_rec,1);
-%         ymin = pts_pos_o_truth(k_test).cdata(i_rec,2);
-%         plot(xmin, ymin, 'y*', 'LineWidth', 3, 'MarkerSize', 15);
-%     end
+    for i_rec = 1:size(pts_pos_o(nframe).cdata,1)
+        xmin = pts_pos_o(nframe).cdata(i_rec,1);
+        ymin = pts_pos_o(nframe).cdata(i_rec,2);
+        w = pts_pos_o(nframe).cdata(i_rec,3);
+        h = pts_pos_o(nframe).cdata(i_rec,4);
+        rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','y');
+    end
+    for i_rec = 1:size(pts_pos_o_truth(k_test).cdata,1)
+        xmin = pts_pos_o_truth(k_test).cdata(i_rec,1);
+        ymin = pts_pos_o_truth(k_test).cdata(i_rec,2);
+        plot(xmin, ymin, 'y*', 'LineWidth', 3, 'MarkerSize', 15);
+    end
 %     for i_rec = 1:size(pts_neg_b(nframe).cdata,1)
 %         xmin = pts_neg_b(nframe).cdata(i_rec,1);
 %         ymin = pts_neg_b(nframe).cdata(i_rec,2);

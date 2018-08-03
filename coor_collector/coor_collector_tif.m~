@@ -10,11 +10,10 @@ load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/90000_
 neg = pts_neg;
 pos = pts_pos;
 % neg_b = pts_neg_b;
-neg_b(90000).cdata = [];
+neg_b
 pos_o = pts_pos_o;
 nuc = pts_nuc;
 % nucb = pts_nucb;
-nucb(90000).cdata = [];
 
 clear pts_neg pts_pos pts_neg_b pts_pos_o pts_nuc pts_nucb;
 

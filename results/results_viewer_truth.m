@@ -4,31 +4,24 @@ clear variables;
 
 k = 1;
 nframes = 13000;
-thres_pos = 0.25;
+thres_pos = 0;
 thres_neg = 0;
 thres_pos_o = 0;
 % thres_neg_b = 0;
 thres_nuc = 0;
 % thres_nucb = 0;
 % thres_rand = 1;
-path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit_4v1_local/VOC2007/JPEGImages/';
+path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/VOC_file/VOCdevkit_4v1/VOC2007/JPEGImages/';
 
-load('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/pts_collected/18000_4c.mat', 'pts_neg', 'pts_pos', 'pts_neg_b', 'pts_pos_o', 'pts_nuc', 'pts_nucb');
 
-pts_pos_truth = pts_pos;
-pts_neg_truth = pts_neg;
-pts_pos_o_truth = pts_pos_o;
-pts_nuc_truth = pts_nuc;    
 
-clear pts_neg pts_pos pts_pos_o pts_nuc;
-
-test_pos = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_pos.txt');
-test_neg = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_neg.txt');
-test_pos_o = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_pos_o.txt');
-% test_neg_b = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_neg_b.txt');
-test_nuc = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_nuc.txt');
-% test_nucb = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_nucb.txt');
-% test_rand = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_rand.txt');
+test_pos = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_pos.txt');
+test_neg = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_neg.txt');
+test_pos_o = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_pos_o.txt');
+% test_neg_b = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_neg_b.txt');
+test_nuc = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_nuc.txt');
+% test_nucb = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_nucb.txt');
+% test_rand = importdata('/Users/ruoshiliu/Desktop/tests/Jul30_150weights/comp4_det_test_rand.txt');
 
 test_set_neg = unique(test_neg(:,1));
 test_set_pos = unique(test_pos(:,1));
@@ -38,7 +31,7 @@ test_set_nuc = unique(test_nuc(:,1));
 % test_set_nucb = unique(test_nucb(:,1));
 % test_set_rand = unique(test_rand(:,1));
 
-im_temp = [sprintf('%06.0f', 1) '.jpg'];
+im_temp = [sprintf('%06.0f', 8201) '.jpg'];
 im_name = strcat(path, im_temp);
 im = imread(im_name);
 height = size(im,1);
@@ -270,14 +263,7 @@ for m = 1:size(test_set_pos,1)
 %     end
 %     pts_rand(m).cdata = rec;
 end
-for iii = 1:size(pts_pos,1)
-    pts_pos(iii).cdata = [pts_pos(iii).cdata; pts_pos_o(iii).cdata];
-end
 
-for iii = 1:size(pts_pos_truth,1)
-    pts_pos_truth(iii).cdata = [pts_pos_truth(iii).cdata; pts_pos_o_truth(iii).cdata];
-end
-    
 
 
 % path = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/d200_3_pos0_20171016/';
@@ -345,10 +331,10 @@ function kp1_Callback(source,eventdata)
         txt_neg = pts_neg(k).cdata(:,5);
         i = insertText(i, pts_neg(k).cdata(:,1:2), txt_neg, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
     end
-%     if ~isempty(pts_pos_o(k).cdata)
-%         txt_pos_o = pts_pos_o(k).cdata(:,5);
-%         i = insertText(i, pts_pos_o(k).cdata(:,1:2), txt_pos_o, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
-%     end
+    if ~isempty(pts_pos_o(k).cdata)
+        txt_pos_o = pts_pos_o(k).cdata(:,5);
+        i = insertText(i, pts_pos_o(k).cdata(:,1:2), txt_pos_o, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
+    end
 %     if ~isempty(pts_neg_b(k).cdata)
 %         txt_neg_b = pts_neg_b(k).cdata(:,5);
 %         i = insertText(i, pts_neg_b(k).cdata(:,1:2), txt_neg_b, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',5);
@@ -376,14 +362,8 @@ function kp1_Callback(source,eventdata)
         w = pts_pos(nframe).cdata(i_rec,3);
         h = pts_pos(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','g');
+
     end
-    for i_rec = 1:size(pts_pos_truth(k_test).cdata,1)
-        xmin = pts_pos_truth(k_test).cdata(i_rec,1);
-        ymin = pts_pos_truth(k_test).cdata(i_rec,2);
-        plot(xmin, ymin, 'g*', 'LineWidth', 3, 'MarkerSize', 15);
-    end
-    
-    
     for i_rec = 1:size(pts_neg(nframe).cdata,1)
         xmin = pts_neg(nframe).cdata(i_rec,1);
         ymin = pts_neg(nframe).cdata(i_rec,2);
@@ -391,25 +371,13 @@ function kp1_Callback(source,eventdata)
         h = pts_neg(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','r');
     end
-    for i_rec = 1:size(pts_neg_truth(k_test).cdata,1)
-        xmin = pts_neg_truth(k_test).cdata(i_rec,1);
-        ymin = pts_neg_truth(k_test).cdata(i_rec,2);
-        plot(xmin, ymin, 'r*', 'LineWidth', 3, 'MarkerSize', 15);
+    for i_rec = 1:size(pts_pos_o(nframe).cdata,1)
+        xmin = pts_pos_o(nframe).cdata(i_rec,1);
+        ymin = pts_pos_o(nframe).cdata(i_rec,2);
+        w = pts_pos_o(nframe).cdata(i_rec,3);
+        h = pts_pos_o(nframe).cdata(i_rec,4);
+        rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','y');
     end
-    
-    
-%     for i_rec = 1:size(pts_pos_o(nframe).cdata,1)
-%         xmin = pts_pos_o(nframe).cdata(i_rec,1);
-%         ymin = pts_pos_o(nframe).cdata(i_rec,2);
-%         w = pts_pos_o(nframe).cdata(i_rec,3);
-%         h = pts_pos_o(nframe).cdata(i_rec,4);
-%         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','y');
-%     end
-%     for i_rec = 1:size(pts_pos_o_truth(k_test).cdata,1)
-%         xmin = pts_pos_o_truth(k_test).cdata(i_rec,1);
-%         ymin = pts_pos_o_truth(k_test).cdata(i_rec,2);
-%         plot(xmin, ymin, 'y*', 'LineWidth', 3, 'MarkerSize', 15);
-%     end
 %     for i_rec = 1:size(pts_neg_b(nframe).cdata,1)
 %         xmin = pts_neg_b(nframe).cdata(i_rec,1);
 %         ymin = pts_neg_b(nframe).cdata(i_rec,2);
@@ -417,19 +385,12 @@ function kp1_Callback(source,eventdata)
 %         h = pts_neg_b(nframe).cdata(i_rec,4);
 %         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','w');
 %     end
-
-
     for i_rec = 1:size(pts_nuc(nframe).cdata,1)
         xmin = pts_nuc(nframe).cdata(i_rec,1);
         ymin = pts_nuc(nframe).cdata(i_rec,2);
         w = pts_nuc(nframe).cdata(i_rec,3);
         h = pts_nuc(nframe).cdata(i_rec,4);
         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','m');
-    end
-    for i_rec = 1:size(pts_nuc_truth(k_test).cdata,1)
-        xmin = pts_nuc_truth(k_test).cdata(i_rec,1);
-        ymin = pts_nuc_truth(k_test).cdata(i_rec,2);
-        plot(xmin, ymin, 'm*', 'LineWidth', 3, 'MarkerSize', 15);
     end
 %     for i_rec = 1:size(pts_nucb(nframe).cdata,1)
 %         xmin = pts_nucb(nframe).cdata(i_rec,1);

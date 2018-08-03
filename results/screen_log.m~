@@ -1,5 +1,5 @@
 clear variables;
-log = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/augmentation_comparison/8_2_13200_3400_local_rotation/8_2_13200_3400_local_rotation.log',',');
+log = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/screen_logs_graph/7_27_6600_1700_non0.2/7_27_6600_1700_non0.2.log',',');
 k_loss = cell(size(log,1),1);
 k_fscore = cell(size(log,1),1);
 k_recall = cell(size(log,1),1);
@@ -21,7 +21,7 @@ for i = 1:size(k_loss,1)
     end
 end
 x = [];
-for i = 1:696
+for i = 1:729
     x = [x; mean(loss_arr((i-1)*116+1:i*116))];
 end
 plot(x);
@@ -57,16 +57,8 @@ for i = 1:size(k_precision,1)
         precision_arr = [precision_arr; precision_num];
     end
 end
-
- 
-
-
-x(730:size(x,1)) = [];
-recall_arr(730:size(recall_arr,1)) = [];
-precision_arr(730:size(precision_arr,1)) = [];
-fscore_arr(730:size(fscore_arr,1)) = [];
-
 % plot(precision_arr);
+ 
 figure(1)
 plot(x)
 grid
@@ -80,6 +72,9 @@ figure(4)
 plot(recall_arr)
 grid
 
-filename = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/augmentation_comparison/8_2_13200_3400_local_rotation/fscore_local.mat';
-fscore_local = fscore_arr;
-save(filename,'fscore_local');
+x(730:size() = [];
+recall_arr(730:993) = [];
+precision_arr(730:993) = [];
+fscore_arr(730:993) = [];
+filename = '/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/screen_logs_graph/7_27_6600_1700_non0.2/graphs.mat'
+save(filename, 'x','fscore_arr','precision_arr','recall_arr')
