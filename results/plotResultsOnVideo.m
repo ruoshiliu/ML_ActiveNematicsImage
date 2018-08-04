@@ -1,5 +1,5 @@
 %% read video information
-clear variables;
+% clear variables;
 
 k = 1;
 nframes = 13000;
@@ -21,13 +21,14 @@ pts_nuc_truth = pts_nuc;
 
 clear pts_neg pts_pos pts_pos_o pts_nuc;
 
-test_pos = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_pos.txt');
-test_neg = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_neg.txt');
-test_pos_o = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_pos_o.txt');
-% test_neg_b = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_neg_b.txt');
-test_nuc = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_nuc.txt');
-% test_nucb = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_nucb.txt');
-% test_rand = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/8_31_6600_1200_local/comp4_det_test_rand.txt');
+test_pos = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_pos.txt');
+test_neg = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_neg.txt');
+test_pos_o = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_pos_o.txt');
+% test_neg_b = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_neg_b.txt');
+test_nuc = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_nuc.txt');
+% test_nucb = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_nucb.txt');
+% test_rand = importdata('/Users/ruoshiliu/Desktop/OneDrive/Summer Project 2018/Aug 2nd/video/7_x_6000/comp4_det_test_rand.txt');
+
 
 test_set_neg = unique(test_neg(:,1));
 test_set_pos = unique(test_pos(:,1));
@@ -37,7 +38,7 @@ test_set_nuc = unique(test_nuc(:,1));
 % test_set_nucb = unique(test_nucb(:,1));
 % test_set_rand = unique(test_rand(:,1));
 
-im_temp = [sprintf('%06.0f', 1) '.jpg'];
+im_temp = [sprintf('%06.0f', 8801) '.jpg'];
 im_name = strcat(path, im_temp);
 im = imread(im_name);
 height = size(im,1);
@@ -269,14 +270,82 @@ for m = 1:size(test_set_pos,1)
 %     end
 %     pts_rand(m).cdata = rec;
 end
-for iii = 1:size(pts_pos,1)
+for iii = 1:size(pts_pos,2)
     pts_pos(iii).cdata = [pts_pos(iii).cdata; pts_pos_o(iii).cdata];
 end
 
-for iii = 1:size(pts_pos_truth,1)
+for iii = 1:size(pts_pos_truth,2)
     pts_pos_truth(iii).cdata = [pts_pos_truth(iii).cdata; pts_pos_o_truth(iii).cdata];
 end
-% clearvars -except pts_neg pts_neg_truth pts_nuc pts_nuc_truth pts_pos pts_pos_truth test_set_neg test_set_nuc test_set_pos;
+clearvars -except pts_neg pts_neg_truth pts_nuc pts_nuc_truth pts_pos pts_pos_truth test_set_neg test_set_nuc test_set_pos path test_set_pos_ppp;
+
+% v = VideoWriter('d500_old.avi','Uncompressed AVI');
+% v.FrameRate = 1;
+% open(v);
+% 
+% for ii = 1589:1688
+%     k_test = test_set_pos(ii,1); 
+%     filename = [sprintf('%06.0f',k_test) '.jpg'];
+%     name = strcat(path, filename);
+%     i = imread(name);
+%         if ~isempty(pts_pos(ii).cdata)
+%         txt_pos = pts_pos(ii).cdata(:,5);
+%         i = insertText(i, pts_pos(ii).cdata(:,1:2), txt_pos, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',10);
+%     end
+%     if ~isempty(pts_neg(ii).cdata)
+%         txt_neg = pts_neg(ii).cdata(:,5);
+%         i = insertText(i, pts_neg(ii).cdata(:,1:2), txt_neg, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',10);
+%     end
+%     if ~isempty(pts_nuc(ii).cdata)
+%         txt_nuc = pts_nuc(ii).cdata(:,5);
+%         i = insertText(i, pts_nuc(ii).cdata(:,1:2), txt_nuc, 'BoxColor', 'blue', 'TextColor', 'white','FontSize',10);
+%     end
+%     
+%     for i_rec = 1:size(pts_pos(ii).cdata,1)
+%         xmin = pts_pos(ii).cdata(i_rec,1);
+%         ymin = pts_pos(ii).cdata(i_rec,2);
+%         w = pts_pos(ii).cdata(i_rec,3);
+%         h = pts_pos(ii).cdata(i_rec,4);
+% %         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','g');
+%         i = insertShape(i,'Rectangle',[xmin,ymin,w,h],'LineWidth',1,'Color','g');
+%     end
+%     for i_rec = 1:size(pts_neg(ii).cdata,1)
+%         xmin = pts_neg(ii).cdata(i_rec,1);
+%         ymin = pts_neg(ii).cdata(i_rec,2);
+%         w = pts_neg(ii).cdata(i_rec,3);
+%         h = pts_neg(ii).cdata(i_rec,4);
+% %         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','r');
+%         i = insertShape(i,'Rectangle',[xmin,ymin,w,h],'LineWidth',1,'Color','r');
+%     end
+%     for i_rec = 1:size(pts_nuc(ii).cdata,1)
+%         xmin = pts_nuc(ii).cdata(i_rec,1);
+%         ymin = pts_nuc(ii).cdata(i_rec,2);
+%         w = pts_nuc(ii).cdata(i_rec,3);
+%         h = pts_nuc(ii).cdata(i_rec,4);
+% %         rectangle('Position',[xmin,ymin,w,h],'LineWidth',1,'LineStyle','-','EdgeColor','m');
+%         i = insertShape(i,'Rectangle',[xmin,ymin,w,h],'LineWidth',1,'Color','m');
+%     end
+%     for i_rec = 1:size(pts_pos_truth(k_test).cdata,1)
+%         xmin = pts_pos_truth(k_test).cdata(i_rec,1);
+%         ymin = pts_pos_truth(k_test).cdata(i_rec,2);
+% %         plot(xmin, ymin, 'g*', 'LineWidth', 3, 'MarkerSize', 15);
+%         i = insertShape(i,'Circle',[xmin,ymin, 8],'LineWidth',2,'Color','g');
+%     end
+%     for i_rec = 1:size(pts_neg_truth(k_test).cdata,1)
+%         xmin = pts_neg_truth(k_test).cdata(i_rec,1);
+%         ymin = pts_neg_truth(k_test).cdata(i_rec,2);
+% %         plot(xmin, ymin, 'r*', 'LineWidth', 3, 'MarkerSize', 15);
+%         i = insertShape(i,'Circle',[xmin,ymin, 8],'LineWidth',2,'Color','r');
+%     end
+%     for i_rec = 1:size(pts_nuc_truth(k_test).cdata,1)
+%         xmin = pts_nuc_truth(k_test).cdata(i_rec,1);
+%         ymin = pts_nuc_truth(k_test).cdata(i_rec,2);
+% %         plot(xmin, ymin, 'm*', 'LineWidth', 3, 'MarkerSize', 15);
+%         i = insertShape(i,'Circle',[xmin,ymin, 8],'LineWidth',2,'Color','m');
+%     end
+%     writeVideo(v,i);
+% end
+%  close(v);
 
 
 
